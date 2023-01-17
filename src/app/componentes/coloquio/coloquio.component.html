@@ -1,0 +1,34 @@
+<ion-card (click)="asistirColoquioEst()">
+  <ion-card-header class="ion-text-center">
+    <ion-card-title>Coloquio</ion-card-title>
+  </ion-card-header>
+
+  <ion-card-content class="ion-text-center">
+
+    <h1>{{coloquio.nombre}}</h1>
+
+
+  </ion-card-content>
+
+  <ion-footer class="ion-text-center">
+    <ion-row>
+      <ion-col>
+        <ion-icon name="calendar-outline"></ion-icon>
+        <ion-card-subtitle> {{coloquio.fecha | date:'EEE d'}} <br>{{coloquio.fecha | date:'MMM'}}, {{coloquio.fecha | date:'y'}}</ion-card-subtitle>
+
+      </ion-col>
+      <ion-col center text-center>
+        <ion-icon name="time-outline"></ion-icon>
+        <ion-card-subtitle> {{coloquio.fecha | date:'h:mm a'}} </ion-card-subtitle>
+
+      </ion-col>
+
+      <ion-col center text-center>
+        <ion-icon name="location-outline"></ion-icon>
+        <ion-card-subtitle>{{coloquio.lugar}}</ion-card-subtitle>
+
+      </ion-col>
+    </ion-row>
+  </ion-footer>
+  
+</ion-card>

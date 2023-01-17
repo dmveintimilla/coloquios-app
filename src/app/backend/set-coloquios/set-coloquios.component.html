@@ -1,0 +1,297 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+
+
+    <ion-title class="subtitulo">Configuracion</ion-title>
+    <ion-buttons slot="end">
+      <ion-button [routerLink]="['/tabs/tab1']" color="primary">
+        <ion-icon name="home-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+    <ion-buttons slot="start">
+
+      <ion-menu-button color="primary"></ion-menu-button>
+
+    </ion-buttons>
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content class="ion-padding" [fullscreen]="true" [style.--background]="scanActive?'#00000000':'#FAF3E9'">
+  <div class="body-content-container">
+    <ion-card class="ion-padding" [hidden]="!scanActive">
+      <ion-card-title>Estudiante Registrado: {{valorString}}</ion-card-title>
+    </ion-card>
+
+    <div class="contenedorSeccionConfiguracion" [hidden]="scanActive">
+
+      <ion-segment [(ngModel)]="segment">
+
+        <ion-segment-button value="proximos" color="primary">
+          <ion-text color="primary" class="subtitulo">
+            Proximos
+          </ion-text>
+
+        </ion-segment-button>
+        <ion-segment-button value="progreso" color="primary">
+          <ion-text color="primary" class="subtitulo">
+            Progreso
+          </ion-text>
+
+        </ion-segment-button>
+        <ion-segment-button value="finalizados" color="primary">
+          <ion-text color="primary" class="subtitulo">
+            Finalizados
+          </ion-text>
+        </ion-segment-button>
+        
+      </ion-segment>
+
+
+      <div [ngSwitch]="segment">
+        <ion-card *ngSwitchCase="'proximos'">
+          <div class="div" *ngIf="enableViewColoquio">
+            <ion-item>
+              <ion-title class="subtitulo">Coloquios</ion-title>
+              <ion-label></ion-label>
+            </ion-item>
+            <ion-item *ngFor="let coloquio of filterEventByType('proximo')">
+              <ion-label class="normal subtitulo">{{coloquio.nombre}}</ion-label>
+
+              <!-- Coloquio proximo solo puede editar datos y ser eliminado -->
+              <ion-buttons slot="end">
+                <ion-button (click)="actualizaAProgreso(coloquio)">
+                  <ion-icon slot="icon-only" name="play-circle-outline"></ion-icon>
+                </ion-button>
+                <ion-button (click)="newColoquio = coloquio; enableNewColoquio = true; enableViewColoquio=false;">
+                  <ion-icon slot="icon-only" name="create"></ion-icon>
+                </ion-button>
+
+                <ion-button (click)="deleteColoquio(coloquio)">
+                  <ion-icon slot="icon-only" name="trash-bin" color="danger"></ion-icon>
+                </ion-button>
+              </ion-buttons>
+            </ion-item>
+
+            <div class="ion-text-center">
+              <ion-button class="normal" (click)="nuevo(); enableViewColoquio=false" color="dark" shape="default">
+                Añadir coloquio
+              </ion-button>
+            </div>
+
+          </div>
+
+          <div *ngIf="enableNewColoquio">
+            <ion-item>
+              <ion-buttons slot="end">
+                <ion-button (click)="enableViewColoquio=true; enableNewColoquio=false ">
+                  <ion-icon slot="start" name="close"></ion-icon>
+                </ion-button>
+              </ion-buttons>
+            </ion-item>
+
+            <div class="text-center">
+              <ion-text class="subtitulo encabezado" color="terciary">Ingrese datos del coloquio</ion-text>
+            </div>
+
+            <div>
+              <ion-card class="nameCard">
+                <ion-item lines="">
+                  <ion-label position="stacked" class="ion-padding-bottom ultrathin">Nombre Coloquio</ion-label>
+                  <ion-input [(ngModel)]="newColoquio.nombre" type="text" placeholder="Coloquio: Data Science"
+                    class="ion-margin-vertical"></ion-input>
+                </ion-item>
+              </ion-card>
+
+              <ion-item lines="">
+                <ion-label position="stacked" class="ion-padding-bottom ultrathin">Nombre para Elemento de Calificacion
+                  D2L</ion-label>
+                <ion-input [(ngModel)]="newColoquio.nameD2L" type="text"
+                  placeholder="Formato (MMM.D-HHh). Ej: Ene.8-12h"></ion-input>
+              </ion-item>
+
+              <ion-item lines="">
+                <ion-label position="stacked" class="ion-padding-bottom ultrathin">Lugar</ion-label>
+                <ion-input [(ngModel)]="newColoquio.lugar" type="text" placeholder="Teatro Shakespeare"></ion-input>
+              </ion-item>
+              <ion-item lines="">
+                <ion-label position="stacked" class="ion-padding-bottom ultrathin">Cantidad máxima de estudiantes
+                </ion-label>
+                <ion-input [(ngModel)]="newColoquio.cantidad" type="number" placeholder="200"></ion-input>
+              </ion-item>
+
+              <ion-list>
+                <ion-item lines="none">
+                  <ion-label position="stacked" class="ion-padding-bottom ultrathin">Fechas</ion-label>
+                </ion-item>
+                <ion-item id="open-modal">
+                  <ion-label>Seleccione una fecha</ion-label>
+                  <ion-note slot="end">{{newColoquio.fecha | date: "yyyy-MM-dd h:mm:ss a"}}</ion-note>
+                </ion-item>
+                <ion-modal trigger="open-modal" [cssClass]="'center'">
+                  <ng-template>
+                    <ion-datetime slot="content" [(ngModel)]="newColoquio.fecha" display-format="MMMM YY"
+                      [firstDayOfWeek]="1" hourCycle="h12" value="2023-03-21T11:30:00" min="2023-01-01T00:00:00"
+                      max="2023-12-31T23:59:59" locale="es-ES">
+                      <span slot="time-label">Tiempo</span>
+                      >
+                    </ion-datetime>
+                  </ng-template>
+                </ion-modal>
+              </ion-list>
+              <div>
+                <ion-button expand="block" shape="round" color="primary"
+                  (click)="guardarColoquio(); enableNewColoquio=false; enableViewColoquio=true">
+                  Añadir coloquio
+                </ion-button>
+              </div>
+            </div>
+
+          </div>
+        </ion-card>
+
+        <ion-card *ngSwitchCase="'progreso'">
+          <div class="div" *ngIf="enableViewColoquio">
+            <ion-item>
+              <ion-title class="subtitulo">Coloquios</ion-title>
+              <ion-label></ion-label>
+            </ion-item>
+
+            <ion-item *ngFor="let coloquio of filterEventByType('progreso')">
+              <ion-label class="normal subtitulo">{{coloquio.nombre}}</ion-label>
+
+              <!-- Coloquio en progreso solo puede editar su estado, escannear asistencia, ver asistencia -->
+              <ion-buttons slot="end">
+                <ion-button (click)="asistencia(coloquio); enableViewRegister = true; enableViewColoquio=false;">
+                  <ion-icon slot="icon-only" name="document-text-outline"></ion-icon>
+                </ion-button>
+                <ion-button (click)="startScanner()">
+
+                  <ion-icon slot="icon-only" name="qr-code-sharp"></ion-icon>
+                </ion-button>
+
+                <ion-button (click)="actualizaAProx(coloquio)">
+                  <ion-icon slot="icon-only" name="arrow-back-circle"></ion-icon>
+                </ion-button>
+                <ion-button (click)="actualizarAFinalizado(coloquio)">
+                  <ion-icon name="stop-circle-outline"></ion-icon>
+                </ion-button>
+
+              </ion-buttons>
+            </ion-item>
+          </div>
+
+        </ion-card>
+
+        <ion-card *ngSwitchCase="'finalizados'">
+          <div class="div" *ngIf="enableViewColoquio">
+            <ion-item>
+              <ion-title class="titulo">Coloquios</ion-title>
+              <ion-label></ion-label>
+            </ion-item>
+
+            <ion-item *ngFor="let coloquio of filterEventByType('finalizado')">
+              <ion-label class="normal subtitulo">{{coloquio.nombre}}</ion-label>
+
+              <!-- Coloquio finalizado solo puede editar su estado,  ver asistencia -->
+              <ion-buttons slot="end">
+                <ion-button (click)="asistencia(coloquio); ">
+                  <ion-icon slot="icon-only" name="document-text-outline"></ion-icon>
+                </ion-button>
+
+                <ion-button (click)="enviarCorreoAsistencia(coloquio)" color="primary">
+                  <ion-icon name="send" slot="icon-only"></ion-icon>
+                </ion-button>
+
+              </ion-buttons>
+            </ion-item>
+          </div>
+
+          <div *ngIf="enableNewColoquio">
+            <ion-item>
+              <ion-buttons slot="end">
+                <ion-button (click)="enableViewColoquio=true; enableNewColoquio=false ">
+                  <ion-icon slot="start" name="close"></ion-icon>
+                </ion-button>
+              </ion-buttons>
+            </ion-item>
+
+            <div class="text-center">
+              <h3 class="subtitulo encabezado">Edite estado del coloquio</h3>
+            </div>
+
+            <div>
+
+              <ion-list>
+                <ion-item>
+                  <ion-select [(ngModel)]="newColoquio.estado" interface="popover" placeholder="Estado del coloquio">
+                    <ion-select-option value="proximo">Próximo</ion-select-option>
+                    <ion-select-option value="progreso">En progreso</ion-select-option>
+                    <ion-select-option value="finalizado">Finalizado</ion-select-option>
+                  </ion-select>
+                </ion-item>
+              </ion-list>
+
+              <div>
+                <ion-button expand="block" shape="round" color="primary"
+                  (click)="guardarColoquio(); enableNewColoquio=false; enableViewColoquio=true">
+                  Editar coloquio
+                </ion-button>
+              </div>
+            </div>
+
+          </div>
+        </ion-card>
+
+      </div>
+
+
+      <div class="div" *ngIf="enableViewRegister">
+
+
+        <ion-item>
+          <ion-buttons slot="end">
+            <ion-button (click)="enableViewRegister=false; enableViewColoquio=true;">
+              <ion-icon slot="start" name="close"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+          <ion-label class="ion-text-center">
+            <h3 class="titulo encabezado">Asistencia</h3>
+          </ion-label>
+        </ion-item>
+        <ion-list>
+          <ion-item *ngFor="let asistencia of asistenciaService.asistencias" detail>
+            <ion-label>
+              <h2>{{ asistencia.estudiante.nombre }} {{ asistencia.estudiante.id }}</h2>
+              <p>{{ asistencia.fecha.toDate() | date: "yyyy-MM-dd h:mm:ss a" }}</p>
+              <p>{{ asistencia.valorNota }}</p>
+            </ion-label>
+          </ion-item>
+
+        </ion-list>
+      </div>
+    </div>
+    <div [hidden]="!scanActive">
+      <ion-row class="scan-button">
+        <ion-col class="ion-no-padding">
+          <ion-button expand="full" (click)="stopScanner()">Stop</ion-button>
+        </ion-col>
+        <ion-col size="12">
+          <ion-button class="scan-button mb-t" expand="full" (click)="startScanner();" [hidden]="!scanActive">
+            SCAN
+          </ion-button>
+        </ion-col>
+
+      </ion-row>
+
+    </div>
+
+    <div class="scan-box" [hidden]="!scanActive"></div>
+
+
+
+
+
+  </div>
+</ion-content>

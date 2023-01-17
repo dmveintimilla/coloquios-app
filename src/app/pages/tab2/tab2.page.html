@@ -1,0 +1,68 @@
+<ion-header no-border>
+  <ion-toolbar>
+    <ion-title class="subtitulo">
+      Perfil
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+
+
+<ion-content class="ion-padding">
+  <div class="body-content-container">
+
+
+    <div class="contentAdmin" *ngIf="admin">
+
+      <ion-text class="titulo ion-text-center">Bienvenido administrador</ion-text>
+
+
+      <ion-button type="submit" [routerLink]="['/set-coloquios']" expand="block" class="mt-3 mb-3">Administración de
+        coloquios</ion-button>
+
+
+     
+
+
+
+
+
+    </div>
+
+    <div class="contentEstudiante" *ngIf="!admin">
+
+      <ion-text class="titulo text-center">Datos del estudiante</ion-text>
+
+      <ion-card>
+
+        <ion-item class="" lines="">
+          <ion-label position="" class="ion-padding-bottom">Correo: {{user.email}}</ion-label>
+        </ion-item>
+
+        <ion-item class="" lines="">
+          <ion-label position="" class="ion-padding-bottom">Nombre estudiante: {{estudiante.nombre}}
+            {{estudiante.apellido}}</ion-label>
+        </ion-item>
+
+        <ion-item class="" lines="">
+          <ion-label position="" class="ion-padding-bottom">Codigo estudiante: {{estudiante.id}}</ion-label>
+        </ion-item>
+
+    
+      </ion-card>
+    </div>
+
+
+
+
+
+    <ion-button type="submit" (click)="authService.SignOut()" expand="block">Logout</ion-button>
+  </div>
+
+
+
+
+
+
+
+</ion-content>

@@ -1,0 +1,58 @@
+<!-- APP FINAL -->
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title class="subtitulo">
+      PróximosC oloquios
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content
+  [fullscreen]="true"
+  [style.--background]="scanActive?'#00000000':'#ffffff'"
+>
+<ion-card class="ion-padding">
+  <ion-card-title>Estudiante registrado: {{valorString}}</ion-card-title>
+</ion-card>
+<ion-row  [hidden]="!scanActive">
+  <ion-col class="ion-no-padding" >
+    <ion-label>Estudiante registrado: {{valorString}}</ion-label>
+   </ion-col>
+</ion-row>
+<ion-row class="" [hidden]="scanActive">
+  <ion-col class="ion-no-padding">
+    <ion-button type="submit" [routerLink]="['/set-coloquios']" expand="block" class="mt-3 mb-3"
+    >Administración de coloquios</ion-button
+  >
+  </ion-col>
+  <ion-col class="ion-no-padding">
+    <ion-button type="submit" [routerLink]="['/tabs/tab1']" expand="block" class="mt-3 mb-3"
+    >Home de coloquios</ion-button
+  >
+  </ion-col>
+</ion-row>
+  <ion-card  [hidden]="scanActive">
+    <ion-card-title>Titulo</ion-card-title>
+    <ion-card-subtitle>{{hola}}</ion-card-subtitle>
+   
+    
+  </ion-card>
+  <ion-button expand="full" (click)="startScanner()" [hidden]="scanActive">
+    SCAN
+  </ion-button>
+
+  <ion-row class="scan-button" [hidden]="!scanActive">
+    <ion-col class="ion-no-padding">
+      <ion-button expand="full" (click)="stopScanner()">Stop</ion-button>
+    </ion-col>
+    <ion-col size="12">
+      <ion-button class="scan-button mb-t" expand="full" (click)="startScanner()" [hidden]="!scanActive">
+        SCAN
+      </ion-button>
+    </ion-col>
+
+  </ion-row>
+  
+  
+  <div class="scan-box" [hidden]="!scanActive"></div>
+</ion-content>
